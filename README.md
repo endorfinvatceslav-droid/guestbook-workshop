@@ -1,74 +1,39 @@
-# 📒 guestbook — стартовый репозиторий воркшопа
 
-Небольшая **гостевая книга** на FastAPI: можно оставить сообщение и посмотреть все оставленные. Данные хранятся в PostgreSQL.
+# Guestbook Workshop
 
-## Что умеет
+Гостевая книга на FastAPI и PostgreSQL.
 
-- `GET /` — приветствие
-- `GET /health` — проверка «жив ли сервис»
-- `GET /messages` — список сообщений (новые сверху)
-- `POST /messages` — добавить сообщение: тело `{"author": "...", "text": "..."}`
+## Технологии
+- Python 3.12
+- FastAPI
+- PostgreSQL 16
+- uv
+- Docker Compose
+- GitHub Actions
+- GitHub Container Registry
 
-## Текущее состояние: «работает у меня»
-
-Честно предупреждаем: сейчас проект заводится только у автора и только если звёзды сошлись. А именно:
-
-- зависимости лежат в `requirements.txt` и никак не зафиксированы;
-- адрес базы и **пароль зашиты прямо в `main.py`**;
-- нет ни `Dockerfile`, ни `compose.yaml` — базу нужно поднимать и настраивать руками;
-- нет `.gitignore`, нет `.env`.
-
-Вот как автор запускает это у себя (и почему так оставлять нельзя):
+## Запуск
+Создай `.env` на основе `.env.example` и заполни настройки.
 
 ```bash
-pip install -r requirements.txt
-# ... где-то локально поднят PostgreSQL с базой guestbook и тем самым паролем из кода ...
-uvicorn main:app
+docker compose up --build -d
 ```
 
-## 🎯 Ваша задача
+Приложение: http://localhost:8000  
+API-документация: http://localhost:8000/docs  
+Health check: http://localhost:8000/health
 
-**Нужно получить** тот же проект, доведённый до прода:
-
-- зависимости зафиксированы через **uv** (`pyproject.toml` + `uv.lock`), версия Python закреплена;
-- есть **Dockerfile** и **.dockerignore**, образ собирается;
-- есть **compose.yaml**, поднимающий приложение **и** PostgreSQL одной командой, с правильным порядком запуска и хранением данных;
-- настройки собраны в один конфиг на **pydantic-settings**, в коде нет `os.environ` вразнобой;
-- **секретов нет ни в коде, ни в коммите**: они живут в `.env` (в `.gitignore`), а в репозитории лежит `.env.example`.
-
-**Бизнес-логику менять не нужно** (эндпоинты и SQL уже работают) — вы работаете с упаковкой, конфигурацией и запуском.
-
-## 🚀 Как начать
-
-1. Форкните репозиторий воркшопа к себе (кнопка **Fork**).
-2. Склонируйте форк и заведите рабочую ветку:
+## Проверки
 
 ```bash
-git clone https://github.com/ВАШ-ЛОГИН/guestbook-workshop.git
-cd guestbook-workshop
-git switch -c to-prod
+uv sync
+uv run ruff check .
+uv run pytest
 ```
 
-3. Выполнить задание, сверяясь с критериями.
+## CI/CD
+GitHub Actions запускает Ruff и pytest при push и pull request. После успешных проверок публикация отправляет Docker-образ в GitHub Container Registry.
 
-## ✅ Критерии готовности
+Теги `vX.Y.Z` используются для выпуска версий.
 
-- [ ] Зависимости на **uv**: есть `pyproject.toml` и `uv.lock`, `requirements.txt` удалён, версия Python закреплена (`.python-version`)
-- [ ] Есть **`.gitignore`** с `.venv`, `.env`, `__pycache__`
-- [ ] Настройки собраны в **`config.py`** (pydantic-settings); в `main.py` нет зашитых адреса и пароля
-- [ ] Секретов нет ни в коде, ни в коммите: `.env` в `.gitignore`, в репозитории есть **`.env.example`**, в `compose.yaml` пароль через **`${...}`**
-- [ ] Есть **`Dockerfile`** (зависимости ставятся до кода, `--host 0.0.0.0`) и **`.dockerignore`** (без `.env`, `.git`, `.venv`)
-- [ ] **`compose.yaml`** поднимает `app` + `db`; наружу проброшен только `app`; есть `depends_on: service_healthy`, `healthcheck` и `volume`
-- [ ] **Приёмочный тест пройден:** сообщение добавляется, отображается и переживает `down`/`up`
-- [ ] `git grep -i supersecret` не находит ничего; работа влита в `main` через merge
-
-## 🏁 Как завершить
-
-```bash
-git add .
-git commit -m "chore: гостевая книга доведена до прода (uv, Docker, Compose, конфиг)"
-git switch main
-git merge to-prod
-git push -u origin main
-```
-
+Дополнительно: [RUNBOOK.md](RUNBOOK.md), [CHANGELOG.md](CHANGELOG.md).
