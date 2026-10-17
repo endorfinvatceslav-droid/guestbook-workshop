@@ -38,14 +38,18 @@ def index():
 def health():
     return {"status": "ok"}
 
+@app.get("/version")
+def version():
+    return {"version": "1.1.0"}
+
 
 @app.get("/messages")
 def list_messages():
     with connect() as conn:
         rows = conn.execute(
-            "SELECT author, text FROM messages ORDER BY id DESC"
+            "SELECT author, text FROM messages ORDER BY id DESC" 
         ).fetchall()
-    return [{"author": author, "text": text} for author, text in rows]
+    return [{"author": author, "text": text} for author, text in rows] 
 
 
 @app.post("/messages")
