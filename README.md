@@ -1,7 +1,7 @@
 
 # Guestbook Workshop
 
-Гостевая книга на FastAPI и PostgreSQL.
+гостевая книга на FastAPI и PostgreSQL.
 
 ## Технологии
 - Python 3.12
@@ -13,15 +13,15 @@
 - GitHub Container Registry
 
 ## Запуск
-Создай `.env` на основе `.env.example` и заполни настройки.
+создать `.env` на основе `.env.example` и заполнить настройки.
 
 ```bash
 docker compose up --build -d
 ```
 
-Приложение: http://localhost:8000  
+приложение: http://localhost:8000  
 API-документация: http://localhost:8000/docs  
-Health check: http://localhost:8000/health
+health check: http://localhost:8000/health
 
 ## Проверки
 
@@ -32,8 +32,8 @@ uv run pytest
 ```
 
 ## CI/CD
-GitHub Actions запускает Ruff и pytest при push и pull request. После успешных проверок публикация отправляет Docker-образ в GitHub Container Registry.
+gitHub Actions запускает Ruff и pytest при push и pull request. после успешных проверок публикация отправляет Docker-образ в GitHub Container Registry.
 
-Теги `vX.Y.Z` используются для выпуска версий.
+теги `vX.Y.Z` используются для выпуска версий.
 
-Дополнительно: [RUNBOOK.md](RUNBOOK.md), [CHANGELOG.md](CHANGELOG.md).
+дополнительно: [RUNBOOK.md](RUNBOOK.md), [CHANGELOG.md](CHANGELOG.md).
